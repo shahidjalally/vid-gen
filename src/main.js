@@ -1,5 +1,5 @@
 const APP_KEY = 'pk_KjV32GDuJNWrvF3k';
-const CALLBACK_PATH = '/callback';
+const CALLBACK_PATH = '/callback/';
 const STORAGE_KEY = 'pollinations_user_api_key';
 const FIXED_OPTIONS = { model: 'wan', width: '1080', height: '1920', duration: '15', aspectRatio: '9:16', audio: 'true' };
 const DEFAULT_SCENE = 'A confident young Pakistani businesswoman walking through a modern SRLINES digital marketing office, speaking naturally to the camera. While speaking, she gestures toward large digital displays showing social media analytics, engagement charts, Facebook, Instagram, YouTube, TikTok, and LinkedIn branding, content calendars, designers editing reels, marketers collaborating, clients reviewing campaigns, and successful social media results. The office is modern, bright, premium, technology-focused, and includes elegant SRLINES branding throughout. The presenter smiles confidently, maintains eye contact with the camera, walks naturally through the office, and ends with a friendly call-to-action gesture toward the viewer. Cinematic 9:16 vertical format, handheld camera movement, realistic office lighting, shallow depth of field, highly engaging commercial quality, premium corporate atmosphere, natural facial expressions, no text overlays, clean frame.';
