@@ -4,7 +4,7 @@ A SRLINES web app for generating Pollinations.ai videos with Bring Your Own Poll
 
 ## What the app does
 
-- Users authenticate through Pollinations/GitHub using the configured publishable app key: `pk_KjV32GDuJNWrvF3k`.
+- Users authenticate through Pollinations/GitHub using the configured publishable app key: `pk_KjV32GDuJNWRvF3k`.
 - Pollinations redirects back to `https://vid-gen.srlines.net/callback/` with a temporary user `sk_...` key in the URL fragment.
 - The app stores that user key in the visitor's browser local storage only.
 - The home page asks for exactly two inputs:
