@@ -1,4 +1,4 @@
-const APP_KEY = 'pk_KjV32GDuJNWrvF3k';
+const APP_KEY = 'pk_KjV32GDuJNWRvF3k';
 const CALLBACK_PATH = '/callback/';
 const STORAGE_KEY = 'pollinations_user_api_key';
 const FIXED_OPTIONS = { model: 'wan', width: '1080', height: '1920', duration: '15', aspectRatio: '9:16', audio: 'true' };
