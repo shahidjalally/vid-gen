@@ -5,7 +5,7 @@ A SRLINES web app for generating Pollinations.ai videos with Bring Your Own Poll
 ## What the app does
 
 - Users authenticate through Pollinations/GitHub using the configured publishable app key: `pk_KjV32GDuJNWrvF3k`.
-- Pollinations redirects back to `https://vid-gen.srlines.net/callback` with a temporary user `sk_...` key in the URL fragment.
+- Pollinations redirects back to `https://vid-gen.srlines.net/callback/` with a temporary user `sk_...` key in the URL fragment.
 - The app stores that user key in the visitor's browser local storage only.
 - The home page asks for exactly two inputs:
   1. Video scene
@@ -29,7 +29,7 @@ Point `https://vid-gen.srlines.net` to this repository with GitHub Pages:
 4. In DNS for `srlines.net`, create a `CNAME` record:
    - Name/Host: `vid-gen`
    - Value/Target: `<your-github-username>.github.io`
-5. Keep the Pollinations app key redirect URL exactly as configured: `https://vid-gen.srlines.net/callback`.
+5. Keep the Pollinations app key redirect URL exactly as configured: `https://vid-gen.srlines.net/callback/`.
 6. Enable **Enforce HTTPS** after GitHub verifies the DNS record.
 
 ## Local development
