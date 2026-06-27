@@ -15,7 +15,7 @@ function callbackUrl() {
 }
 
 function selectedDuration() {
-  return $('duration').value;
+  return $('duration')?.value || DEFAULT_DURATION;
 }
 
 function generationOptions() {
@@ -54,8 +54,10 @@ function authUrl() {
 }
 
 function showStatus(message) {
-  $('status').textContent = message;
-  $('status').hidden = !message;
+  const status = $('status');
+  if (!status) return;
+  status.textContent = message;
+  status.hidden = !message;
 }
 
 function renderAuth() {
@@ -75,48 +77,83 @@ function renderAuth() {
   });
 }
 
+function homePath() {
+  return window.location.pathname.includes('/vid-gen/') ? '/vid-gen/' : '/';
+}
+
 function normalizeHomePath() {
-  const base = window.location.pathname.includes('/vid-gen/') ? '/vid-gen/' : '/';
-  window.history.replaceState({}, document.title, base);
+  window.history.replaceState({}, document.title, homePath());
+}
+
+function returnHomeAfterCallback(messageKey, messageValue) {
+  const params = new URLSearchParams({ [messageKey]: messageValue });
+  window.location.replace(`${window.location.origin}${homePath()}#${params}`);
 }
 
 function handleRedirect() {
   const hash = new URLSearchParams(window.location.hash.slice(1));
   const returnedKey = hash.get('api_key');
   const error = hash.get('error');
+  const success = hash.get('login');
+  const loginError = hash.get('login_error');
+
   if (returnedKey) {
     apiKey = returnedKey;
     localStorage.setItem(STORAGE_KEY, returnedKey);
+    returnHomeAfterCallback('login', 'success');
+    return true;
+  }
+
+  if (error) {
+    returnHomeAfterCallback('login_error', error);
+    return true;
+  }
+
+  if (success === 'success') {
     normalizeHomePath();
     showStatus('Login successful. Your Pollinations key is saved locally in this browser.');
-  } else if (error) {
+  } else if (loginError) {
     normalizeHomePath();
-    showStatus(`Login failed: ${error}`);
+    showStatus(`Login failed: ${loginError}`);
   }
+
+  return false;
 }
 
-$('scene').value = DEFAULT_SCENE;
-$('voiceover').value = DEFAULT_VOICEOVER;
-$('duration').innerHTML = DURATION_OPTIONS
-  .map((duration) => `<option value="${duration}"${duration === DEFAULT_DURATION ? ' selected' : ''}>${duration} seconds</option>`)
-  .join('');
-$('fixed-grid').innerHTML = Object.entries(FIXED_OPTIONS)
-  .map(([key, value]) => `<div><span>${key}</span><strong>${value}</strong></div>`)
-  .join('');
-$('generate').addEventListener('click', () => {
-  if (!apiKey) return showStatus('Please log in with Pollinations first so the app can use your authorized API key.');
-  if (!$('scene').value.trim() || !$('voiceover').value.trim()) return showStatus('Please fill both required fields: video scene and English voiceover script.');
-  const url = buildVideoUrl($('scene').value, $('voiceover').value, apiKey);
-  $('video').src = url;
-  $('open').href = url;
-  $('url').value = url;
-  $('result').hidden = false;
-  showStatus('Video request URL is ready and shown below. Use Open video if you want to launch it in a new tab.');
-});
-$('copy').addEventListener('click', async () => {
-  await navigator.clipboard.writeText($('url').value);
-  showStatus('Generated URL copied to clipboard.');
-});
+function initGenerator() {
+  if (handleRedirect()) return;
 
-handleRedirect();
-renderAuth();
+  $('scene').value = DEFAULT_SCENE;
+  $('voiceover').value = DEFAULT_VOICEOVER;
+
+  const durationSelect = $('duration');
+  if (durationSelect) {
+    durationSelect.innerHTML = DURATION_OPTIONS
+      .map((duration) => `<option value="${duration}"${duration === DEFAULT_DURATION ? ' selected' : ''}>${duration} seconds</option>`)
+      .join('');
+  }
+
+  $('fixed-grid').innerHTML = Object.entries(FIXED_OPTIONS)
+    .map(([key, value]) => `<div><span>${key}</span><strong>${value}</strong></div>`)
+    .join('');
+
+  $('generate').addEventListener('click', () => {
+    if (!apiKey) return showStatus('Please log in with Pollinations first so the app can use your authorized API key.');
+    if (!$('scene').value.trim() || !$('voiceover').value.trim()) return showStatus('Please fill both required fields: video scene and English voiceover script.');
+    const url = buildVideoUrl($('scene').value, $('voiceover').value, apiKey);
+    $('video').src = url;
+    $('open').href = url;
+    $('url').value = url;
+    $('result').hidden = false;
+    showStatus('Video request URL is ready and shown below. Use Open video if you want to launch it in a new tab.');
+  });
+
+  $('copy').addEventListener('click', async () => {
+    await navigator.clipboard.writeText($('url').value);
+    showStatus('Generated URL copied to clipboard.');
+  });
+
+  renderAuth();
+}
+
+initGenerator();
