@@ -1,7 +1,9 @@
 const APP_KEY = 'pk_KjV32GDuJNWRvF3k';
 const CALLBACK_PATH = '/callback/';
 const STORAGE_KEY = 'pollinations_user_api_key';
-const FIXED_OPTIONS = { model: 'wan', width: '1080', height: '1920', duration: '15', aspectRatio: '9:16', audio: 'true' };
+const FIXED_OPTIONS = { model: 'wan', width: '1080', height: '1920', aspectRatio: '9:16', audio: 'true' };
+const DURATION_OPTIONS = ['5', '10', '15'];
+const DEFAULT_DURATION = '15';
 const DEFAULT_SCENE = 'A confident young Pakistani businesswoman walking through a modern SRLINES digital marketing office, speaking naturally to the camera. While speaking, she gestures toward large digital displays showing social media analytics, engagement charts, Facebook, Instagram, YouTube, TikTok, and LinkedIn branding, content calendars, designers editing reels, marketers collaborating, clients reviewing campaigns, and successful social media results. The office is modern, bright, premium, technology-focused, and includes elegant SRLINES branding throughout. The presenter smiles confidently, maintains eye contact with the camera, walks naturally through the office, and ends with a friendly call-to-action gesture toward the viewer. Cinematic 9:16 vertical format, handheld camera movement, realistic office lighting, shallow depth of field, highly engaging commercial quality, premium corporate atmosphere, natural facial expressions, no text overlays, clean frame.';
 const DEFAULT_VOICEOVER = 'Are daily posts not bringing results? With SRLINES, get 7 professional posts every week, 2 short reels, complete social media management, and SEO-friendly content for only 10,000 rupees per month. Contact us today and get professional reels, posts, and complete social media management for your business.';
 
@@ -12,20 +14,29 @@ function callbackUrl() {
   return `${window.location.origin}${CALLBACK_PATH}`;
 }
 
-function buildPrompt(scene, voiceover) {
+function selectedDuration() {
+  return $('duration').value;
+}
+
+function generationOptions() {
+  return { ...FIXED_OPTIONS, duration: selectedDuration() };
+}
+
+function buildPrompt(scene, voiceover, duration) {
   return [
     scene.trim(),
     'The voiceover script below is written in English only as source meaning for the prompt.',
     'Translate and adapt the complete voiceover into natural spoken Urdu for the final audio.',
     'All spoken dialogue, narration, and voiceover in the generated video must be entirely in Urdu, with no English words spoken unless they are brand names.',
-    'The full video and complete Urdu voiceover must fit smoothly within exactly 15 seconds.',
+    `The full video and complete Urdu voiceover must fit smoothly within exactly ${duration} seconds.`,
     `English source voiceover script: "${voiceover.trim()}"`,
   ].join(' ');
 }
 
 function buildVideoUrl(scene, voiceover, key) {
-  const prompt = encodeURIComponent(buildPrompt(scene, voiceover));
-  const params = new URLSearchParams({ ...FIXED_OPTIONS, key });
+  const duration = selectedDuration();
+  const prompt = encodeURIComponent(buildPrompt(scene, voiceover, duration));
+  const params = new URLSearchParams({ ...generationOptions(), key });
   return `https://gen.pollinations.ai/video/${prompt}?${params}`;
 }
 
@@ -86,6 +97,9 @@ function handleRedirect() {
 
 $('scene').value = DEFAULT_SCENE;
 $('voiceover').value = DEFAULT_VOICEOVER;
+$('duration').innerHTML = DURATION_OPTIONS
+  .map((duration) => `<option value="${duration}"${duration === DEFAULT_DURATION ? ' selected' : ''}>${duration} seconds</option>`)
+  .join('');
 $('fixed-grid').innerHTML = Object.entries(FIXED_OPTIONS)
   .map(([key, value]) => `<div><span>${key}</span><strong>${value}</strong></div>`)
   .join('');
@@ -97,7 +111,7 @@ $('generate').addEventListener('click', () => {
   $('open').href = url;
   $('url').value = url;
   $('result').hidden = false;
-  showStatus('Video request URL is ready. If generation is still processing, keep the preview open or retry in a few moments.');
+  showStatus('Video request URL is ready and shown below. Use Open video if you want to launch it in a new tab.');
 });
 $('copy').addEventListener('click', async () => {
   await navigator.clipboard.writeText($('url').value);
