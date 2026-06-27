@@ -1,1 +1,9 @@
-{"scripts":{"dev":"python3 -m http.server 5173","build":"rm -rf dist && mkdir -p dist/src && cp index.html dist/ && cp src/main.js src/styles.css dist/src/","preview":"python3 -m http.server 4173 --directory dist"},"dependencies":{},"devDependencies":{}}
+{
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "build": "rm -rf dist && mkdir -p dist/src dist/callback && cp index.html dist/ && cp callback/index.html dist/callback/index.html && cp src/main.js src/styles.css dist/src/",
+    "preview": "python3 -m http.server 4173 --directory dist"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

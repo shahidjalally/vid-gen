@@ -9,7 +9,8 @@ A SRLINES web app for generating Pollinations.ai videos with Bring Your Own Poll
 - The app stores that user key in the visitor's browser local storage only.
 - The home page asks for exactly two inputs:
   1. Video scene
-  2. Urdu voiceover
+  2. English voiceover source script that the prompt instructs Pollinations to speak in Urdu
+- The voiceover field is written in English for prompt clarity, and the generated prompt explicitly instructs the final spoken dialogue and narration to be natural Urdu.
 - All generation options are fixed in code:
   - `model=wan`
   - `width=1080`
