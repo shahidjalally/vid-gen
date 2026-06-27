@@ -14,7 +14,7 @@
         <div class="hero-copy">
           <p class="eyebrow">SRLINES · Pollinations.ai BYOP Video Generator</p>
           <h1 id="page-title">Generate premium Urdu vertical videos.</h1>
-          <p class="lead">Log in once, describe the video in English, provide the English voiceover script, and this app locks the Pollinations model, timing, mobile aspect ratio, audio, and resolution for consistent SRLINES-ready output.</p>
+          <p class="lead">Log in once, describe the video in English, provide the English voiceover script, and this app locks the Pollinations model, mobile aspect ratio, audio, and resolution while letting you choose the duration for consistent SRLINES-ready output.</p>
           <div class="hero-actions">
             <a class="button" href="#generator">Start generator</a>
             <a class="button secondary" href="#login-help">Login help</a>
@@ -51,7 +51,7 @@
             <p class="section-kicker">Fixed video request</p>
             <h2 id="generator-title">Video inputs</h2>
           </div>
-          <span class="required-note">Only 2 editable fields</span>
+          <span class="required-note">Scene, voiceover, and duration editable</span>
         </div>
 
         <label for="scene">1) Video scene prompt (English)
@@ -63,6 +63,11 @@
           <textarea id="voiceover" rows="6" spellcheck="true"></textarea>
         </label>
         <p class="field-help">Write the message in English. The final generated voiceover is instructed to be spoken naturally in Urdu.</p>
+
+        <label for="duration">3) Duration
+          <select id="duration" aria-label="Video duration"></select>
+        </label>
+        <p class="field-help">Choose how many seconds the generated video and Urdu voiceover should fit into.</p>
 
         <div id="fixed-grid" class="fixed-grid" aria-label="Locked generation settings"></div>
         <button id="generate" class="generate">▶ Generate video URL</button>
