@@ -14,7 +14,7 @@
         <div class="hero-copy">
           <p class="eyebrow">SRLINES · Pollinations.ai BYOP Video Generator</p>
           <h1 id="page-title">Generate premium Urdu vertical videos.</h1>
-          <p class="lead">Log in once, describe the video in English, provide the English voiceover script, and this app locks the Pollinations model, mobile aspect ratio, audio, and resolution while letting you choose the duration for consistent SRLINES-ready output.</p>
+          <p class="lead">Log in once, describe the video in English, provide the English voiceover script, and click Generate Video one time. This app locks the Pollinations model, mobile aspect ratio, audio, and resolution while preventing preview or copy actions from triggering duplicate paid requests.</p>
           <div class="hero-actions">
             <a class="button" href="#generator">Start generator</a>
             <a class="button secondary" href="#login-help">Login help</a>
@@ -42,6 +42,8 @@
           <li><strong>Authorize with GitHub if asked.</strong><span>Approve the consent screen so Pollinations can issue your temporary user key.</span></li>
           <li><strong>Return automatically.</strong><span>The key is stored only in this browser and is never committed to the repo.</span></li>
           <li><strong>Generate from mobile or desktop.</strong><span>The app is optimized for phones, tablets, and desktop browsers.</span></li>
+          <li><strong>Click Generate Video once.</strong><span>The button opens the final Pollinations URL directly in a new tab without loading a preview first.</span></li>
+          <li><strong>Edit before regenerating.</strong><span>After one request, change the scene, voiceover, or duration before opening another paid generation.</span></li>
         </ol>
       </section>
 
@@ -51,44 +53,30 @@
             <p class="section-kicker">Fixed video request</p>
             <h2 id="generator-title">Video inputs</h2>
           </div>
-          <span class="required-note">Scene, voiceover, and duration editable</span>
+          <span class="required-note">One paid click per prompt set</span>
         </div>
 
         <label for="scene">1) Video scene prompt (English)
           <textarea id="scene" rows="9" spellcheck="true"></textarea>
         </label>
-        <p class="field-help">Write the visuals, camera movement, brand feel, setting, and presenter action in English.</p>
+        <p class="field-help">Write the visuals, camera movement, brand feel, setting, presenter action, and final call to action in English. Keep all visual instructions in one clear prompt.</p>
 
         <label for="voiceover">2) Voiceover script (English)
           <textarea id="voiceover" rows="6" spellcheck="true"></textarea>
         </label>
-        <p class="field-help">Write the message in English. The final generated voiceover is instructed to be spoken naturally in Urdu.</p>
+        <p class="field-help">Write the full message in English. The final generated voiceover is instructed to be spoken naturally in Urdu, so keep the script concise enough for the selected duration.</p>
 
         <label for="duration">3) Duration
           <select id="duration" aria-label="Video duration"></select>
         </label>
-        <p class="field-help">Choose how many seconds the generated video and Urdu voiceover should fit into.</p>
+        <p class="field-help">Choose how many seconds the generated video and Urdu voiceover should fit into. Changing this value resets the one-click guard.</p>
 
         <div id="fixed-grid" class="fixed-grid" aria-label="Locked generation settings"></div>
-        <button id="generate" class="generate">▶ Generate video URL</button>
+        <button id="generate" class="generate">▶ Generate Video</button>
         <p id="status" class="status" role="status" hidden></p>
       </section>
 
-      <section id="result" class="panel result" hidden aria-labelledby="result-title">
-        <div class="panel-header">
-          <div>
-            <p class="section-kicker">Pollinations request</p>
-            <h2 id="result-title">Generated request</h2>
-          </div>
-        </div>
-        <video id="video" controls playsinline preload="metadata"></video>
-        <div class="actions">
-          <button id="copy">⧉ Copy URL</button>
-          <a id="open" class="button secondary" target="_blank" rel="noreferrer">↗ Open video</a>
-        </div>
-        <label for="url" class="sr-only">Generated video URL</label>
-        <textarea id="url" readonly rows="5"></textarea>
-      </section>
+
     </main>
     <script type="module" src="/src/main.js?v=2"></script>
   </body>

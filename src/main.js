@@ -9,6 +9,7 @@ const DEFAULT_VOICEOVER = 'Are daily posts not bringing results? With SRLINES, g
 
 const $ = (id) => document.getElementById(id);
 let apiKey = localStorage.getItem(STORAGE_KEY) || '';
+let lastOpenedRequestSignature = '';
 
 function callbackUrl() {
   return `${window.location.origin}${CALLBACK_PATH}`;
@@ -20,6 +21,22 @@ function selectedDuration() {
 
 function generationOptions() {
   return { ...FIXED_OPTIONS, duration: selectedDuration() };
+}
+
+function requestSignature(scene, voiceover) {
+  return JSON.stringify({ scene: scene.trim(), voiceover: voiceover.trim(), duration: selectedDuration(), options: generationOptions() });
+}
+
+function setGenerateDisabled(isDisabled) {
+  const generate = $('generate');
+  if (!generate) return;
+  generate.disabled = isDisabled;
+  generate.setAttribute('aria-disabled', String(isDisabled));
+}
+
+function resetSingleClickGuard() {
+  lastOpenedRequestSignature = '';
+  setGenerateDisabled(false);
 }
 
 function buildPrompt(scene, voiceover, duration) {
@@ -71,7 +88,7 @@ function renderAuth() {
   $('logout')?.addEventListener('click', () => {
     localStorage.removeItem(STORAGE_KEY);
     apiKey = '';
-    $('result').hidden = true;
+    resetSingleClickGuard();
     renderAuth();
     showStatus('Logged out. The local browser key was removed.');
   });
@@ -137,20 +154,28 @@ function initGenerator() {
     .map(([key, value]) => `<div><span>${key}</span><strong>${value}</strong></div>`)
     .join('');
 
-  $('generate').addEventListener('click', () => {
-    if (!apiKey) return showStatus('Please log in with Pollinations first so the app can use your authorized API key.');
-    if (!$('scene').value.trim() || !$('voiceover').value.trim()) return showStatus('Please fill both required fields: video scene and English voiceover script.');
-    const url = buildVideoUrl($('scene').value, $('voiceover').value, apiKey);
-    $('video').src = url;
-    $('open').href = url;
-    $('url').value = url;
-    $('result').hidden = false;
-    showStatus('Video request URL is ready and shown below. Use Open video if you want to launch it in a new tab.');
+  ['scene', 'voiceover', 'duration'].forEach((fieldId) => {
+    $(fieldId)?.addEventListener('input', resetSingleClickGuard);
+    $(fieldId)?.addEventListener('change', resetSingleClickGuard);
   });
 
-  $('copy').addEventListener('click', async () => {
-    await navigator.clipboard.writeText($('url').value);
-    showStatus('Generated URL copied to clipboard.');
+  $('generate').addEventListener('click', () => {
+    const scene = $('scene').value;
+    const voiceover = $('voiceover').value;
+
+    if (!apiKey) return showStatus('Please log in with Pollinations first so the app can use your authorized API key.');
+    if (!scene.trim() || !voiceover.trim()) return showStatus('Please fill both required fields: video scene and English voiceover script.');
+
+    const signature = requestSignature(scene, voiceover);
+    if (signature === lastOpenedRequestSignature) {
+      setGenerateDisabled(true);
+      return showStatus('This exact scene, voiceover, and duration already opened once. Edit an input before generating another paid request.');
+    }
+
+    lastOpenedRequestSignature = signature;
+    setGenerateDisabled(true);
+    window.open(buildVideoUrl(scene, voiceover, apiKey), '_blank', 'noopener,noreferrer');
+    showStatus('Generate Video clicked once for this scene, voiceover, and duration. Edit an input to enable another request.');
   });
 
   renderAuth();
